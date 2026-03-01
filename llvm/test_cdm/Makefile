@@ -7,20 +7,12 @@ COMMONS_DIR = commons
 
 MAIN_SCRIPT = $(SRC_DIR)/main.py
 
-COMMONS_OBJECTS = $(addprefix $(COMMONS_DIR)/, $(addsuffix .obj, $(basename $(notdir $(wildcard $(COMMONS_DIR)/src/*)))))
-
-test: $(VENV_DIR) $(COMMONS_OBJECTS)
-	$(VENV_DIR)/bin/python3 $(MAIN_SCRIPT) -c $(CLANG) -I $(INCLUDE_DIR) $(TESTS_DIR)
+test: $(VENV_DIR)
+	$(VENV_DIR)/bin/python3 $(MAIN_SCRIPT) -c $(CLANG) -I $(INCLUDE_DIR) --verbose $(TESTS_DIR)
 
 $(VENV_DIR):
 	python3 -m venv $@
 	$(VENV_DIR)/bin/pip install -r requirements.txt
-
-$(COMMONS_DIR)/src/%.asm: $(COMMONS_DIR)/src/%.c
-	$(CLANG) -S -target cdm-cocas -O3 -I $(INCLUDE_DIR) -o $@ $^
-
-$(COMMONS_DIR)/%.obj: $(COMMONS_DIR)/src/%.asm
-	$(VENV_DIR)/bin/cocas -c -t cdm16 -o $@ $^
 
 
 .PHONY: test
