@@ -46,7 +46,8 @@ jobs:
               cd ./llvm/build
               find .
       - name: run end-to-end tests
-        run: make -C llvm/test_cdm CLANG=$(realpath llvm/build/bin/clang) test
+        # Use newly built cocas
+        run: ./llvm/build/bin/test_cdm --cocas cocas ./llvm/test_cdm
       - name: run lit tests
         run: ./llvm/build/bin/llvm-lit ./llvm/test/CodeGen/CDM
       - name: upload artifacts
